@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocSnap | Digital Identification Made Easy</title>
+    <title>DigiAI | Digital Identification Made Easy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
@@ -94,7 +94,7 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <span class="text-2xl font-bold gradient-text">DocSnap</span>
+                        <span class="text-2xl font-bold gradient-text">DigiAI</span>
                     </div>
                 </div>
                 <div class="hidden md:block">
@@ -139,7 +139,7 @@
                 <span class="gradient-text">Scan, Extract, Share</span>
             </h1>
             <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10">
-                Digital identification made easier with one scan. Extract information from documents instantly and share securely.
+                Digital identification made easier with one scan. Extract information from personal documents instantly and share securely.
             </p>
             <div class="flex justify-center space-x-4">
                 <button onclick="scrollToUpload()" class="px-8 py-4 rounded-lg text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition transform hover:scale-105 shadow-lg">
@@ -155,7 +155,7 @@
             <div class="relative w-full max-w-4xl">
                 <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-500 rounded-2xl blur opacity-75"></div>
                 <div class="relative glass-card rounded-2xl p-1">
-                    <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="App Preview" class="rounded-xl w-full h-auto">
+                    <img src="ID scan.jpg" alt="Document Scan" class="w-full h-auto rounded-2xl shadow-lg">
                 </div>
             </div>
         </div>
@@ -281,7 +281,7 @@
                         <label class="text-sm font-medium text-gray-400">ID Number</label>
                         <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
                     </div>
-                    <div class="text-lg font-medium">DL-3425-1985-3509</div>
+                    <div class="text-lg font-medium">3425-1985-3509</div>
                 </div>
                 
                 <div class="field-card glass-card rounded-xl p-6">
@@ -289,7 +289,7 @@
                         <label class="text-sm font-medium text-gray-400">Document Type</label>
                         <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
                     </div>
-                    <div class="text-lg font-medium">Driver's License</div>
+                    <div class="text-lg font-medium">National ID</div>
                 </div>
                 
                 <div class="field-card glass-card rounded-xl p-6">
@@ -340,6 +340,8 @@
                 <p class="text-gray-400 mb-6 text-center">Scan this QR code to access the document or share the link below.</p>
                 
                 <div class="w-full flex mb-6">
+                    
+
                     <input type="text" value="https://docsnap.com/share/abc123" class="flex-1 bg-slate-800 border border-gray-700 rounded-l-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" readonly>
                     <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-r-lg text-sm font-medium hover:from-purple-700 hover:to-blue-600 transition">
                         Copy
@@ -377,7 +379,7 @@
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <span class="text-2xl font-bold gradient-text">DocSnap</span>
+                    <span class="text-2xl font-bold gradient-text">DigiAI</span>
                     <p class="mt-4 text-gray-400">
                         Digital identification made easy with one scan.
                     </p>
@@ -539,25 +541,40 @@
         const qrCode = document.getElementById('qr-code');
         
         generateQRBtn.addEventListener('click', () => {
-            // Generate QR code
-            QRCode.toCanvas(qrCode, 'https://docsnap.com/share/abc123', {
-                width: 160,
-                margin: 0,
-                color: {
-                    dark: '#000000',
-                    light: '#ffffff'
-                }
-            }, (error) => {
-                if (error) console.error(error);
-            });
-            
-            // Show modal
-            qrModal.classList.add('active');
-        });
-        
-        closeQRModal.addEventListener('click', () => {
-            qrModal.classList.remove('active');
-        });
+    const qrContainer = document.getElementById('qr-code');
+    const dataToEncode = 'https://docsnap.com/share/abc123';
+
+    // Clear any previous QR code
+    qrContainer.innerHTML = '';
+
+    // Create a new canvas element
+    const canvas = document.createElement('canvas');
+
+    // Generate QR code on the canvas
+    QRCode.toCanvas(canvas, dataToEncode, {
+        width: 160,
+        margin: 0,
+        color: {
+            dark: '#000000',
+            light: '#ffffff'
+        }
+    }, (error) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+        // Append the canvas to the container
+        qrContainer.appendChild(canvas);
+    });
+
+    // Show modal
+    qrModal.classList.add('active');
+    closeQRModal.addEventListener('click', () => {
+    qrModal.classList.remove('active');
+});
+
+});
+
         
         // Close modal when clicking outside
         qrModal.addEventListener('click', (e) => {

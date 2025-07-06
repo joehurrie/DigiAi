@@ -6,96 +6,75 @@
     <title>DigiAI | Digital Identification Made Easy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <style>
-        :root {
-            --primary: #8b5cf6;
-            --secondary: #10b981;
-            --accent: #3b82f6;
-            --dark: #0f172a;
-            --darker: #020617;
-        }
-        
+        /* CSS moved to head */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--darker);
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
+            background: #000000;
             color: #e2e8f0;
-            min-height: 100vh;
         }
         
-        .gradient-text {
-            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
+        /* Consistent glass card styling */
         .glass-card {
-            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .upload-zone {
-            border: 2px dashed rgba(59, 130, 246, 0.5);
             transition: all 0.3s ease;
         }
         
-        .upload-zone:hover, .upload-zone.dragover {
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.05);
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         
-        .progress-bar {
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transition: width 0.3s ease;
+        /* Spline background styling */
+        .spline-container {
+            mix-blend-mode: lighten;
+            filter: blur(0.5px);
         }
         
-        .field-card {
-            transition: all 0.2s ease;
-        }
-        
-        .field-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .qr-modal {
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-        
-        .qr-modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
+        /* Floating animation */
         @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         .floating {
             animation: float 6s ease-in-out infinite;
         }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .spline-container {
+                opacity: 0.2;
+            }
+        }
     </style>
 </head>
-<body class="dark:bg-slate-900">
+<body>
+    <!-- Spline Background -->
+    <div class="spline-container absolute inset-0 w-full h-full z-0 pointer-events-none opacity-20 md:opacity-30">
+        <iframe src="https://my.spline.design/claritystream-a72K0KUwFoZV82QBzvu52Kai/" frameborder="0" width="100%" height="100%"></iframe>
+    </div>
+    <div class="spline-loading absolute inset-0 flex items-center justify-center z-0">
+        <div class="spinner"></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="glass-card fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <span class="text-2xl font-bold gradient-text">DigiAI</span>
-                    </div>
+                            <a href="/" class="flex items-center gap-2 mb-4">
+                  <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center shadow-md text-2xl font-extrabold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  </span>
+                  <span class="text-xl font-semibold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">DijiAi</span>
+                </a>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
@@ -105,7 +84,7 @@
                     </div>
                 </div>
                 <div class="hidden md:block">
-                    <button class="ml-4 px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
+                    <button class="button px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
                         Get Started
                     </button>
                 </div>
@@ -132,76 +111,54 @@
         </div>
     </nav>
 
-<!-- Hero Section -->
-<section id="home" class="relative min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 overflow-hidden">
-
-  <!-- Spline Background -->
-  <div class="absolute inset-0 -z-10">
-    <spline-viewer url="https://prod.spline.design/kVG3-k96vqREZgiI/scene.splinecode" background="#020617" style="width: 100vw; height: 100vh;"></spline-viewer>
-  </div>
-
-  <!-- Foreground Content -->
-
-
-  <div class="flex justify-center space-x-4 z-10">
-    <button onclick="scrollToUpload()" class="px-8 py-4 rounded-lg text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition transform hover:scale-105 shadow-lg">
-      Get Started
-    </button>
-    <button class="px-8 py-4 rounded-lg text-lg font-semibold text-white border border-gray-600 hover:bg-slate-800 transition">
-      Learn More
-    </button>
-  </div>
-</section>
-
-
-        
-        <div class="mt-20 flex justify-center">
-            <div class="relative w-full max-w-4xl">
-                <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-500 rounded-2xl blur opacity-75"></div>
-                <div class="relative glass-card rounded-2xl p-1">
-                    <img src="ID scan.jpg" alt="Document Scan" class="w-full h-auto rounded-2xl shadow-lg">
-                </div>
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 overflow-hidden" style="height: 100vh; min-height: 600px;">
+        <div class="relative z-10 w-full max-w-7xl mx-auto px-6 pt-16 md:pt-24 flex flex-col items-center">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light tracking-tighter mb-6 leading-tight">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Scan. Verify. Share.</span> 
+            </h1>
+            <p class="text-gray-300 text-xl md:text-2xl mb-8 max-w-3xl font-light tracking-wide">
+              AI-powered document sharing with enterprise-grade encryption.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                <button onclick="scrollToUpload()" class="bg-white text-black font-light rounded-md px-8 py-3 hover:bg-opacity-90 transition-all">
+                    Get started
+                </button>
+                <a href="#" class="flex items-center text-gray-300 hover:text-white transition-colors py-3 px-2 group">
+                    Learn more
+                    <span class="material-symbols-outlined ml-1 group-hover:translate-x-1 transition-transform">></span>
+                </a>
             </div>
-        </div>
-        
-        <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass-card p-6 rounded-xl">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    </svg>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 w-full max-w-4xl">
+                <div>
+                    <p class="text-4xl font-light mb-1 tracking-tight">99%</p>
+                    <p class="text-gray-400 font-extralight">Verification accuracy</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Secure Storage</h3>
-                <p class="text-gray-400">Your documents are encrypted and stored securely in the cloud with enterprise-grade protection.</p>
-            </div>
-            <div class="glass-card p-6 rounded-xl">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
+                <div>
+                    <p class="text-4xl font-light mb-1 tracking-tight">10k+</p>
+                    <p class="text-gray-400 font-extralight">Documents processed</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Instant Verification</h3>
-                <p class="text-gray-400">Verify document authenticity in seconds with our advanced validation algorithms.</p>
-            </div>
-            <div class="glass-card p-6 rounded-xl">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
+                <div>
+                    <p class="text-4xl font-light mb-1 tracking-tight">24/7</p>
+                    <p class="text-gray-400 font-extralight">Support available</p>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Easy Sharing</h3>
-                <p class="text-gray-400">Share verified documents with trusted parties through secure links or QR codes.</p>
+                <div>
+                    <p class="text-4xl font-light mb-1 tracking-tight">100%</p>
+                    <p class="text-gray-400 font-extralight">Cloud-based & secure</p>
+                </div>
             </div>
         </div>
     </section>
-
+    </section>
     <!-- Upload Section -->
     <section id="upload" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-5xl font-bold mb-4">
-                <span class="gradient-text">Upload Your Documents</span>
+            <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+                Scan A Document
             </h2>
-            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">
                 Simply drag and drop your files or click to browse. We support images and PDFs.
             </p>
         </div>
@@ -217,7 +174,7 @@
                     <h3 class="text-xl font-semibold mb-2">Drag & Drop Files Here</h3>
                     <p class="text-gray-400 mb-6">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
                     <button id="browse-btn" class="px-6 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
-                        Or Browse Files
+                        Scan Document
                     </button>
                     <input type="file" id="file-input" class="hidden" accept="image/*,.pdf" multiple>
                 </div>
@@ -250,352 +207,1116 @@
             </div>
         </div>
     </section>
-
-    <!-- Results Section -->
-    <section id="results" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    
+    <!-- Features Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-5xl font-bold mb-4">
-                <span class="gradient-text">Extracted Information</span>
+            <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+                Powerful Features
             </h2>
-            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-                Review and edit the extracted data from your documents.
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+                 Tools for document verification and management
             </p>
         </div>
         
-        <div class="max-w-4xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="field-card glass-card rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <label class="text-sm font-medium text-gray-400">Full Name</label>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Feature 1 -->
+            <div class="glass-card border border-[#2A2A2A] rounded-lg overflow-hidden transition-all hover:border-[#8b5cf6]/50 shadow-lg hover:shadow-2xl">
+                <div class="aspect-w-16 aspect-h-9 flex items-center justify-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        </svg>
                     </div>
-                    <div class="text-lg font-medium">John Michael Doe</div>
                 </div>
-                
-                <div class="field-card glass-card rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <label class="text-sm font-medium text-gray-400">Date of Birth</label>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+                <div class="p-5 flex flex-col">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <h3 class="text-base font-medium tracking-tight">Quick Scan</h3>
                     </div>
-                    <div class="text-lg font-medium">15/03/1985</div>
-                </div>
-                
-                <div class="field-card glass-card rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <label class="text-sm font-medium text-gray-400">ID Number</label>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+                    <p class="text-gray-400 mb-3 text-sm leading-relaxed">
+                        Your documents are scanned and encrypted securely in the cloud with enterprise-grade protection.
+                    </p>
+                    <div class="flex text-xs gap-1 mt-auto">
+                        <span class="px-2 py-0.5 rounded-full border border-[#8b5cf6]/30 text-[#8b5cf6]">Secure</span>
+                        <span class="px-2 py-0.5 rounded-full border border-[#3b82f6]/30 text-[#3b82f6]">Fast</span>
                     </div>
-                    <div class="text-lg font-medium">3425-1985-3509</div>
-                </div>
-                
-                <div class="field-card glass-card rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <label class="text-sm font-medium text-gray-400">Document Type</label>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
-                    </div>
-                    <div class="text-lg font-medium">National ID</div>
-                </div>
-                
-                <div class="field-card glass-card rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <label class="text-sm font-medium text-gray-400">Issue Date</label>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
-                    </div>
-                    <div class="text-lg font-medium">22/05/2018</div>
-                </div>
-                
-                <div class="field-card glass-card rounded-xl p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <label class="text-sm font-medium text-gray-400">Expiry Date</label>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
-                    </div>
-                    <div class="text-lg font-medium">21/05/2028</div>
                 </div>
             </div>
             
-            <div class="mt-10 flex justify-center space-x-4">
-                <button id="generate-qr-btn" class="px-6 py-3 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
-                    Generate QR Code
-                </button>
-                <button class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
-                    Download PDF
-                </button>
-                <button class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
-                    Share Link
-                </button>
+            <!-- Feature 2 -->
+            <div class="glass-card border border-[#2A2A2A] rounded-lg overflow-hidden transition-all hover:border-[#10b981]/50 shadow-lg hover:shadow-2xl">
+                <div class="aspect-w-16 aspect-h-9 flex items-center justify-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <h3 class="text-base font-medium tracking-tight">Instant Verification</h3>
+                    </div>
+                    <p class="text-gray-400 mb-3 text-sm leading-relaxed">
+                        Verify document authenticity in seconds with our advanced validation algorithms.
+                    </p>
+                    <div class="flex text-xs gap-1 mt-auto">
+                        <span class="px-2 py-0.5 rounded-full border border-[#10b981]/30 text-[#10b981]">AI-Powered</span>
+                        <span class="px-2 py-0.5 rounded-full border border-[#3b82f6]/30 text-[#3b82f6]">Reliable</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="glass-card border border-[#2A2A2A] rounded-lg overflow-hidden transition-all hover:border-[#ec4899]/50 shadow-lg hover:shadow-2xl">
+                <div class="aspect-w-16 aspect-h-9 flex items-center justify-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-5 flex flex-col">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <h3 class="text-base font-medium tracking-tight">Easy Sharing</h3>
+                    </div>
+                    <p class="text-gray-400 mb-3 text-sm leading-relaxed">
+                        Share verified documents with trusted parties through secure links or QR codes.
+                    </p>
+                    <div class="flex text-xs gap-1 mt-auto">
+                        <span class="px-2 py-0.5 rounded-full border border-[#ec4899]/30 text-[#ec4899]">QR Code</span>
+                        <span class="px-2 py-0.5 rounded-full border border-[#f43f5e]/30 text-[#f43f5e]">Link</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Large Feature Card -->
+            <div class="md:col-span-2 glass-card border border-[#2A2A2A] rounded-lg overflow-hidden transition-all hover:border-[#8b5cf6]/50 shadow-lg hover:shadow-2xl">
+                <div class="flex flex-col md:flex-row gap-8 items-center p-8">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold mb-4">Secure Your Document With Enterprise Grade Security</h3>
+                        <p class="text-gray-400 mb-4">
+                            Experience real-time scanning and preview of your ID or document. Our animated loader shows the scanning process for transparency and trust.
+                        </p>
+                        <div class="flex text-xs gap-1">
+                            <span class="px-2 py-0.5 rounded-full border border-[#8b5cf6]/30 text-[#8b5cf6]">Real-Time</span>
+                            <span class="px-2 py-0.5 rounded-full border border-[#3b82f6]/30 text-[#3b82f6]">Preview</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 flex items-center justify-center">
+                        <img src="ID scan.jpg" alt="Document Scan" class="w-full max-w-xs aspect-square rounded-2xl shadow-lg object-cover" />
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- QR Code Modal -->
-    <div id="qr-modal" class="qr-modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4">
-        <div class="glass-card rounded-2xl p-8 max-w-md w-full">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold">Share Document</h3>
-                <button id="close-qr-modal" class="text-gray-400 hover:text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+    
+
+   <!-- Results Section -->
+<section id="results" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="text-center mb-16">
+    <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+      How It Works
+    </h2>
+    <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+      Scan Review and edit the information on your documents.
+    </p>
+  </div>
+  
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-center">
+    <!-- Animated Database Card -->
+     <div class="text-white/50 text-xs glass px-6 py-1 rounded-full border border-white/10 flex items-center">
+              <span class="relative flex h-2 w-2 mr-1">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              Ready To Scan
+            </div>
+    <div class="w-full lg:w-1/2 relative">
+      <div class="glass-card rounded-2xl overflow-hidden border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+        <!-- Database Schema Preview -->
+        <div class="p-4 flex justify-center relative">
+          <div class="w-full h-64 rounded-xl bg-gradient-to-br from-purple-900/30 to-blue-900/30 border border-purple-500/20 inner-glow overflow-hidden relative">
+            <!-- Animated grid background -->
+            <div class="absolute inset-0 opacity-10">
+              <div class="w-full h-full animate-pulse" style="background-image: linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px); background-size: 15px 15px;"></div>
             </div>
             
-            <div class="flex flex-col items-center">
-                <div id="qr-code" class="w-48 h-48 bg-white p-4 rounded-lg mb-6"></div>
-                <p class="text-gray-400 mb-6 text-center">Scan this QR code to access the document or share the link below.</p>
+            <!-- Database connections -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 320 240">
+              <defs>
+                <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.8" />
+                  <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0.8" />
+                </linearGradient>
+              </defs>
+              
+              <g stroke="url(#connectionGradient)" stroke-width="1.5" fill="none">
+                <!-- Data flow to extracted info -->
+                <path class="connector" d="M160,120 L320,120" />
                 
-                <div class="w-full flex mb-6">
-                    
-
-                    <input type="text" value="https://docsnap.com/share/abc123" class="flex-1 bg-slate-800 border border-gray-700 rounded-l-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" readonly>
-                    <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-r-lg text-sm font-medium hover:from-purple-700 hover:to-blue-600 transition">
-                        Copy
-                    </button>
-                </div>
+                <!-- Primary data flow -->
+                <path class="connector" d="M80,60 L140,60 L140,90 L200,90" />
+                <path class="connector" d="M200,90 L240,90 L240,60 L280,60" />
+                <path class="connector" d="M140,90 L140,120 L200,120" />
+                <path class="connector" d="M200,120 L240,120 L240,150 L200,150" />
                 
-                <div class="flex space-x-4">
-                    <button class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
-                        </svg>
-                    </button>
-                    <button class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z"/>
-                        </svg>
-                    </button>
-                    <button class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.016.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </button>
-                    <button class="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                        </svg>
-                    </button>
+                <!-- Connection nodes -->
+                <circle cx="80" cy="60" r="3" fill="#6366f1"/>
+                <circle cx="200" cy="90" r="3" fill="#8b5cf6"/>
+                <circle cx="280" cy="60" r="3" fill="#a855f7"/>
+                <circle cx="200" cy="120" r="3" fill="#ec4899"/>
+                <circle cx="200" cy="150" r="3" fill="#f43f5e"/>
+              </g>
+            </svg>
+            
+            <!-- Animated Database Tables -->
+            <div class="absolute inset-0 w-full h-full">
+              <!-- Central database hub -->
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-schema-pulse">
+                <div class="w-10 h-10 glass rounded-xl flex items-center justify-center border border-purple-400/30 inner-glow">
+                  <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                  </svg>
                 </div>
+              </div>
+              
+              <!-- Floating table cards -->
+              <div class="absolute left-3 top-12 table-float">
+                <div class="w-20 h-16 glass rounded-lg border border-purple-500/30 shadow-lg overflow-hidden">
+                  <div class="bg-gradient-to-r from-purple-600/30 to-blue-600/30 text-white text-xs px-2 py-1 font-medium border-b border-white/10">users</div>
+                  <div class="px-2 py-1 space-y-1">
+                    <div class="flex items-center space-x-1">
+                      <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
+                      <div class="h-1 w-8 bg-white/30 rounded"></div>
+                    </div>
+                    <div class="h-1 w-6 bg-white/20 rounded"></div>
+                    <div class="h-1 w-9 bg-white/20 rounded"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="absolute right-3 top-12 table-float">
+                <div class="w-20 h-16 glass rounded-lg border border-blue-500/30 shadow-lg overflow-hidden">
+                  <div class="bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-white text-xs px-2 py-1 font-medium border-b border-white/10">documents</div>
+                  <div class="px-2 py-1 space-y-1">
+                    <div class="flex items-center space-x-1">
+                      <div class="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                      <div class="h-1 w-8 bg-white/30 rounded"></div>
+                    </div>
+                    <div class="h-1 w-5 bg-white/20 rounded"></div>
+                    <div class="h-1 w-7 bg-white/20 rounded"></div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+        
+        <!-- Glass divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        
+        <!-- Content -->
+        <div class="p-4">
+          <span class="inline-block px-3 py-1 glass text-purple-300 rounded-full text-xs font-medium mb-3 border border-purple-400/30">Database</span>
+          <h3 class="text-lg font-medium text-white mb-2">Document Processing</h3>
+          <p class="text-white/70 mb-4 leading-relaxed text-sm">
+            Upload to scan your documents and store securely in our servers.
+          </p>
+        </div>
+      </div>
     </div>
+    
+        <!-- Extracted Information -->
+        <div class="w-full lg:w-1/2">
+           <div class="glass-card rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 shadow-xl">
+    
+    <!-- Card Header -->
+    <div class="text-center mb-8">
+      <h2 class="text-2xl font-bold tracking-tight text-white mb-2">
+        Share Documents
+      </h2>
+      <p class="text-purple-200">
+        Review edit and share information with confidentiality.
+      </p>
+    </div>
+    
+    <!-- Data Flow Visualization -->
+    <div class="relative h-2 mb-6">
+      <div class="absolute inset-0 flex items-center">
+        <!-- Animated data flow line -->
+        <div class="h-px bg-gradient-to-r from-transparent via-purple-500/70 to-transparent w-full relative overflow-hidden">
+          <div class="absolute top-0 left-0 h-full w-20 bg-gradient-to-r from-transparent to-purple-400/50 animate-flow-line"></div>
+        </div>
+      </div>
+      <!-- Data nodes -->
+      <div class="absolute -top-1 left-1/4 w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+      <div class="absolute -top-1 left-1/2 w-3 h-3 bg-blue-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+      <div class="absolute -top-1 left-3/4 w-3 h-3 bg-indigo-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+    </div>
+    
+    <!-- Extracted Information Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Field 1 -->
+      <div class="field-card bg-slate-800/50 rounded-lg p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all">
+        <div class="flex justify-between items-start mb-1">
+          <label class="text-sm font-medium text-purple-300">Full Name</label>
+          <button class="text-purple-400 hover:text-purple-300 text-sm font-medium">Edit</button>
+        </div>
+        <div class="text-lg font-medium text-white">----</div>
+      </div>
+      
+      <!-- Field 2 -->
+      <div class="field-card bg-slate-800/50 rounded-lg p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all">
+        <div class="flex justify-between items-start mb-1">
+          <label class="text-sm font-medium text-blue-300">Date of Birth</label>
+          <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+        </div>
+        <div class="text-lg font-medium text-white">-----</div>
+      </div>
+      
+      <!-- Field 3 -->
+      <div class="field-card bg-slate-800/50 rounded-lg p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all">
+        <div class="flex justify-between items-start mb-1">
+          <label class="text-sm font-medium text-indigo-300">ID Number</label>
+          <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">Edit</button>
+        </div>
+        <div class="text-lg font-medium text-white">-----</div>
+      </div>
+      
+      <!-- Field 4 -->
+      <div class="field-card bg-slate-800/50 rounded-lg p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all">
+        <div class="flex justify-between items-start mb-1">
+          <label class="text-sm font-medium text-purple-300">Document Type</label>
+          <button class="text-purple-400 hover:text-purple-300 text-sm font-medium">Edit</button>
+        </div>
+        <div class="text-lg font-medium text-white">------</div>
+      </div>
+      
+      <!-- Field 5 -->
+      <div class="field-card bg-slate-800/50 rounded-lg p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all">
+        <div class="flex justify-between items-start mb-1">
+          <label class="text-sm font-medium text-blue-300">Issue Date</label>
+          <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+        </div>
+        <div class="text-lg font-medium text-white">----
+      </div>
+      
+      <!-- Field 6 -->
+      <div class="field-card bg-slate-800/50 rounded-lg p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all">
+        <div class="flex justify-between items-start mb-1">
+          <label class="text-sm font-medium text-indigo-300">Expiry Date</label>
+          <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">Edit</button>
+        </div>
+        <div class="text-lg font-medium text-white">----</div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    
+  </div>
+      </div>
+      
+    
 
-    <!-- Footer -->
-    <footer class="glass-card mt-20">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <span class="text-2xl font-bold gradient-text">DigiAI</span>
-                    <p class="mt-4 text-gray-400">
-                        Digital identification made easy with one scan.
-                    </p>
+    <!-- Results Section -->
+<section id="results" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="glass-card rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+    <!-- Section Header -->
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
+        Review Scanned Documents
+      </h2>
+      <p class="text-lg text-purple-200 max-w-3xl mx-auto">
+        Review and edit the extracted information from your documents
+      </p>
+    </div>
+    
+    <div class="flex flex-col lg:flex-row gap-8 items-stretch">
+      <!-- Data Processing Visualization -->
+      <div class="w-full lg:w-2/5 relative min-h-[400px]">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <!-- Central Processor -->
+          <div class="relative z-10 w-32 h-32 rounded-full bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/30 flex items-center justify-center inner-glow animate-pulse">
+            <svg class="w-16 h-16 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+            </svg>
+          </div>
+          
+          <!-- Animated Data Nodes -->
+          <div class="absolute top-1/4 left-1/4 data-node animate-float" style="animation-delay: 0s">
+            <div class="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
+              <div class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <div class="data-line"></div>
+          </div>
+          
+          <div class="absolute top-1/3 right-1/4 data-node animate-float" style="animation-delay: 0.5s">
+            <div class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+              <div class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <div class="data-line"></div>
+          </div>
+          
+          <div class="absolute bottom-1/4 left-1/2 data-node animate-float" style="animation-delay: 1s">
+            <div class="w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+              <div class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <div class="data-line"></div>
+          </div>
+          
+          <!-- Data Flow Lines to Cards -->
+          <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.8"/>
+              </linearGradient>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#8b5cf6"/>
+              </marker>
+            </defs>
+            
+            <!-- Flowing data lines -->
+            <path class="flow-line" d="M70,30 L85,30 L85,50" marker-end="url(#arrowhead)"/>
+            <path class="flow-line" d="M70,45 L85,45 L85,50" marker-end="url(#arrowhead)"/>
+            <path class="flow-line" d="M70,60 L85,60 L85,50" marker-end="url(#arrowhead)"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Extracted Information Cards -->
+      <div class="w-full lg:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="field-card glass-card rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all relative overflow-hidden">
+          <!-- Data connection indicator -->
+          <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-500 rounded-full animate-ping"></div>
+          <div class="flex justify-between items-start mb-2">
+            <label class="text-sm font-medium text-purple-300">Full Name</label>
+            <button class="text-purple-400 hover:text-purple-300 text-sm font-medium">Edit</button>
+          </div>
+          <div class="text-lg font-medium text-white">John Michael Doe</div>
+        </div>
+        
+        <div class="field-card glass-card rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full animate-ping" style="animation-delay: 0.2s"></div>
+          <div class="flex justify-between items-start mb-2">
+            <label class="text-sm font-medium text-blue-300">Date of Birth</label>
+            <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+          </div>
+          <div class="text-lg font-medium text-white">15/03/1985</div>
+        </div>
+        
+        <div class="field-card glass-card rounded-xl p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-indigo-500 rounded-full animate-ping" style="animation-delay: 0.4s"></div>
+          <div class="flex justify-between items-start mb-2">
+            <label class="text-sm font-medium text-indigo-300">ID Number</label>
+            <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">Edit</button>
+          </div>
+          <div class="text-lg font-medium text-white">3425-1985-3509</div>
+        </div>
+        
+        <div class="field-card glass-card rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-500 rounded-full animate-ping"></div>
+          <div class="flex justify-between items-start mb-2">
+            <label class="text-sm font-medium text-purple-300">Document Type</label>
+            <button class="text-purple-400 hover:text-purple-300 text-sm font-medium">Edit</button>
+          </div>
+          <div class="text-lg font-medium text-white">National ID</div>
+        </div>
+        
+        <div class="field-card glass-card rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full animate-ping" style="animation-delay: 0.2s"></div>
+          <div class="flex justify-between items-start mb-2">
+            <label class="text-sm font-medium text-blue-300">Issue Date</label>
+            <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
+          </div>
+          <div class="text-lg font-medium text-white">22/05/2018</div>
+        </div>
+        
+        <div class="field-card glass-card rounded-xl p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all relative overflow-hidden">
+          <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-indigo-500 rounded-full animate-ping" style="animation-delay: 0.4s"></div>
+          <div class="flex justify-between items-start mb-2">
+            <label class="text-sm font-medium text-indigo-300">Expiry Date</label>
+            <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">Edit</button>
+          </div>
+          <div class="text-lg font-medium text-white">21/05/2028</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+      <button id="generate-qr-btn" class="px-6 py-3 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
+        Generate QR Code
+      </button>
+      <button class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
+        Save
+      </button>
+      <button class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
+        Share
+      </button>
+    </div>
+  </div>
+</section>
+
+
+    <style>
+      .glass-card {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background: rgba(15, 23, 42, 0.3);
+      }
+      
+      .inner-glow {
+        box-shadow: 
+          inset 0 0 20px rgba(139, 92, 246, 0.3),
+          inset 0 0 40px rgba(99, 102, 241, 0.2),
+          0 0 30px rgba(168, 85, 247, 0.4);
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+      }
+      
+      @keyframes dataStream {
+        0% { stroke-dashoffset: 20; }
+        100% { stroke-dashoffset: 0; }
+      }
+      
+      @keyframes schemaPulse {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+        50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+      }
+      
+      .connector {
+        stroke-dasharray: 8;
+        animation: dataStream 2s linear infinite;
+      }
+      
+      .table-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      .table-float:nth-child(2) { animation-delay: -1.5s; }
+      .table-float:nth-child(3) { animation-delay: -3s; }
+    </style>
+    <!-- Results Card Section -->
+
+
+<style>
+  /* Glass card effect */
+  .glass-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(15, 23, 42, 0.4);
+  }
+  
+  /* Animated flow line */
+  @keyframes flow-line {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(calc(100% + 20px)); }
+  }
+  
+  .animate-flow-line {
+    animation: flow-line 2.5s linear infinite;
+  }
+  
+  /* Pulsing animation for data nodes */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  /* Field card hover effect */
+  .field-card {
+    transition: all 0.3s ease;
+  }
+  
+  .field-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  }
+</style>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+                What Our Users Say
+            </h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+                Trusted by individuals and businesses worldwide
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Testimonial 1 -->
+            <div class="glass-card border border-[#2A2A2A] rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all flex flex-col">
+                <div class="flex items-center mb-4">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-[#8b5cf6] mr-4">
+                    <div>
+                        <div class="font-semibold text-base text-white">James O.</div>
+                        <div class="text-xs text-gray-400">Startup Founder</div>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Product</h3>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Features</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Pricing</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">API</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Resources</h3>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Documentation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Guides</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Company</h3>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">About</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Careers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
-                    </ul>
+                <p class="text-gray-300 text-base mb-4 flex-1">
+                    "DocSnap made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
+                </p>
+                <div class="flex items-center space-x-1">
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
+                    <span class="text-xs text-gray-400">5.0</span>
                 </div>
             </div>
-            <div class="mt-12 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between">
-                <p class="text-gray-400 text-sm">© 2023 DocSnap. All rights reserved.</p>
-                <div class="mt-4 md:mt-0 flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.016.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white">
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                        </svg>
-                    </a>
+            
+            <!-- Testimonial 2 -->
+            <div class="glass-card border border-[#2A2A2A] rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all flex flex-col">
+                <div class="flex items-center mb-4">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-[#10b981] mr-4">
+                    <div>
+                        <div class="font-semibold text-base text-white">Linda K.</div>
+                        <div class="text-xs text-gray-400">HR Manager</div>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-base mb-4 flex-1">
+                    "I love how DocSnap keeps our employee documents organized and secure. The sharing feature is a game changer for remote teams."
+                </p>
+                <div class="flex items-center space-x-1">
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
+                    <span class="text-xs text-gray-400">5.0</span>
+                </div>
+            </div>
+            <div class="glass-card border border-[#2A2A2A] rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all flex flex-col">
+                <div class="flex items-center mb-4">
+                    <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-[#8b5cf6] mr-4">
+                    <div>
+                        <div class="font-semibold text-base text-white">Bonny T.</div>
+                        <div class="text-xs text-gray-400">Startup Founder</div>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-base mb-4 flex-1">
+                    "DocSnap made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
+                </p>
+                <div class="flex items-center space-x-1">
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
+                    <span class="text-xs text-gray-400">5.0</span>
+                </div>
+            </div>
+            <div class="glass-card border border-[#2A2A2A] rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all flex flex-col">
+                <div class="flex items-center mb-4">
+                    <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="User" class="w-12 h-12 rounded-full border-2 border-[#8b5cf6] mr-4">
+                    <div>
+                        <div class="font-semibold text-base text-white">Cynthia N.</div>
+                        <div class="text-xs text-gray-400">Accountant</div>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-base mb-4 flex-1">
+                    "DocSnap made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
+                </p>
+                <div class="flex items-center space-x-1">
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
+                    <span class="text-xs text-gray-400">5.0</span>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+    <!-- Pricing Section -->
+<section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="text-center mb-16">
+    <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+      Enjoy Unlimited Scans
+    </h2>
+    <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+      Flexible pricing for every need. All plans include our core verification features.
+    </p>
+    
+    <!-- Payment Toggle -->
+    <div class="flex justify-center my-8">
+      <div class="inline-flex bg-gray-800 rounded-lg p-1" role="tablist">
+        <button 
+          class="px-6 py-2 rounded-md text-sm font-medium text-white bg-gray-700 transition-colors"
+          aria-selected="true"
+          role="tab"
+        >
+          Monthly
+        </button>
+        <button 
+          class="px-6 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white transition-colors"
+          aria-selected="false"
+          role="tab"
+        >
+          Annual (20% off)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Starter Plan -->
+    <div class="relative group flex flex-col border border-gray-700 rounded-2xl p-8 bg-gray-800/50 hover:border-purple-400/30 transition-all duration-300">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-semibold">Starter</h3>
+        <span class="px-3 py-1 text-xs rounded-full bg-purple-500/10 text-purple-400">Popular</span>
+      </div>
+      <p class="text-gray-400 text-sm mb-6">Perfect for individuals getting started</p>
+      
+      <div class="mb-8">
+        <span class="text-5xl font-bold">$9</span>
+        <span class="text-gray-400 ml-1">/month</span>
+      </div>
+      
+      <ul class="space-y-3 mb-8">
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Up to 100 scans/month
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Basic verification
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Email support
+        </li>
+      </ul>
+      
+      <div class="mt-auto">
+        <button 
+          class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition"
+          aria-label="Get started with Starter plan"
+        >
+          Get Started
+        </button>
+      </div>
+    </div>
+    
+    <!-- Business Plan (Highlighted) -->
+    <div class="relative group flex flex-col border-2 border-purple-500/50 rounded-2xl p-8 bg-gradient-to-br from-purple-900/20 to-blue-900/20 transform hover:scale-[1.02] transition-all duration-300">
+      <div class="absolute top-0 right-0 bg-purple-600 text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">
+        Recommended
+      </div>
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-semibold">Business</h3>
+      </div>
+      <p class="text-gray-400 text-sm mb-6">For growing teams and businesses</p>
+      
+      <div class="mb-8">
+        <span class="text-5xl font-bold">$29</span>
+        <span class="text-gray-400 ml-1">/month</span>
+      </div>
+      
+      <ul class="space-y-3 mb-8">
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Up to 500 scans/month
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Advanced verification
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Priority support
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Team collaboration
+        </li>
+      </ul>
+      
+      <div class="mt-auto">
+        <button 
+          class="w-full py-3 bg-gradient-to-r from-purple-700 to-blue-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+          aria-label="Choose Business plan"
+        >
+          Choose Business
+        </button>
+      </div>
+    </div>
+    
+    <!-- Enterprise Plan -->
+    <div class="relative group flex flex-col border border-gray-700 rounded-2xl p-8 bg-gray-800/50 hover:border-blue-400/30 transition-all duration-300">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-xl font-semibold">Enterprise</h3>
+      </div>
+      <p class="text-gray-400 text-sm mb-6">Custom solutions for large organizations</p>
+      
+      <div class="mb-8">
+        <span class="text-5xl font-bold">Custom</span>
+      </div>
+      
+      <ul class="space-y-3 mb-8">
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Unlimited scans
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Premium verification
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          24/7 dedicated support
+        </li>
+        <li class="flex items-center text-gray-300">
+          <svg class="w-5 h-5 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Custom integrations
+        </li>
+      </ul>
+      
+      <div class="mt-auto">
+        <button 
+          class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition"
+          aria-label="Contact sales for Enterprise plan"
+        >
+          Contact Sales
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <section padding-top="20" class="mt-24">
+  <div class="text-center mb-16 ">
+    <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4 ">
+      Stay Informed On Our Latest Features
+    </h2>
+    <p class="text-lg text-gray-300 max-w-3xl mx-auto mt-10">
+      Never miss an update! Subscribe to our newsletter for the latest features, tips, and exclusive offers.
+    </p>
+  <!-- Newsletter -->
+      <div class="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 mt-10 mb-16">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+          <div class="lg:col-span-3">
+            <h3 class="text-xl text-white font-semibold mb-2">Subscribe to our newsletter</h3>
+            <p class="text-white/70">Stay updated with our latest news, updates, and exclusive offers.</p>
+          </div>
+          <div class="lg:col-span-2">
+            <form class="flex">
+              <input type="email" placeholder="Your email address" class="px-4 py-3 rounded-l-lg bg-white/10 border border-white/20 text-white w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+              <button class="px-5 py-3 rounded-r-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity">
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 text-right text-xs text-blue-200 relative z-10">
+      </section> 
+   
+  <!-- Payment Methods Section 
+  <div class="mt-16 border border-gray-700 rounded-xl p-8 max-w-4xl mx-auto bg-gray-800/50">
+    <h3 class="text-xl font-semibold text-center mb-6">We Accept All Major Payment Methods</h3>
+    <div class="flex flex-wrap justify-center gap-6">
+      <div class="flex flex-col items-center">
+        <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+          </svg>
+        </div>
+        <span class="text-xs mt-2">Bank Transfer</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          </svg>
+        </div>
+        <span class="text-xs mt-2">Credit Cards</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <span class="text-xs mt-2">PayPal</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <span class="text-xs mt-2">Crypto</span>
+      </div>
+    </div>
+    <p class="text-center text-gray-400 text-sm mt-6">
+      All transactions are secured with 256-bit SSL encryption and PCI compliance
+    </p>
+  </div>
+</section>-->
+
+
+  
+  <footer class="relative w-full z-10 overflow-hidden pt-16 pb-8 mt-24">
+    <!-- Glow Backgrounds -->
+    <div class="pointer-events-none select-none absolute z-0 top-0 left-1/2 -translate-x-1/2 w-full h-full">
+      <div class="absolute -top-32 left-1/4 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 right-1/4 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl"></div>
+    </div>
+    <!-- Footer Content -->
+    <div class="relative glass max-w-6xl mx-auto rounded-2xl px-6 py-10 flex flex-col md:flex-row md:justify-between items-center md:items-start gap-8 md:gap-12">
+      <div class="flex flex-col items-center md:items-start">
+        <a href="/" class="flex items-center gap-2 mb-4">
+                  <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center shadow-md text-2xl font-extrabold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  </span>
+                  <span class="text-xl font-semibold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">DijiAi</span>
+                </a>
+        <p class="text-sm text-purple-200 max-w-xs mb-6 text-center md:text-left">
+          Powering tomorrow's digital experiences with brilliance and elegance.
+        </p>
+        <div class="flex gap-3 mt-2 text-purple-400">
+          <a href="#" aria-label="Twitter" class="hover:text-purple-200 transition"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.633 7.997c.013.176.013.353.013.53 0 5.387-4.099 11.605-11.604 11.605A11.561 11.561 0 010 18.29c.373.044.734.074 1.12.074a8.189 8.189 0 005.065-1.737 4.102 4.102 0 01-3.834-2.85c.25.04.5.065.765.065.37 0 .734-.049 1.08-.147A4.092 4.092 0 01.8 8.582v-.05a4.119 4.119 0 001.853.522A4.099 4.099 0 01.812 5.847c0-.02 0-.042.002-.062a11.653 11.653 0 008.457 4.287A4.62 4.62 0 0122 5.924a8.215 8.215 0 002.018-.559 4.108 4.108 0 01-1.803 2.268 8.233 8.233 0 002.368-.648 8.897 8.897 0 01-2.062 2.112z"/></svg></a>
+          <a href="#" aria-label="GitHub" class="hover:text-purple-200 transition"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .29a12 12 0 00-3.797 23.401c.6.11.82-.26.82-.577v-2.17c-3.338.726-4.042-1.415-4.042-1.415-.546-1.387-1.332-1.756-1.332-1.756-1.09-.744.084-.729.084-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.809 1.306 3.495.999.106-.775.418-1.307.76-1.608-2.665-.301-5.466-1.332-5.466-5.933 0-1.31.469-2.381 1.236-3.222-.123-.303-.535-1.523.117-3.176 0 0 1.007-.322 3.301 1.23a11.502 11.502 0 016.002 0c2.292-1.552 3.297-1.23 3.297-1.23.654 1.653.242 2.873.119 3.176.77.841 1.235 1.912 1.235 3.222 0 4.61-2.805 5.629-5.476 5.925.429.369.813 1.096.813 2.211v3.285c0 .32.217.694.825.576A12 12 0 0012 .29"></path></svg></a>
+          <a href="#" aria-label="LinkedIn" class="hover:text-purple-200 transition"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5v-14a5 5 0 00-5-5zm-11 19h-3v-9h3zm-1.5-10.268a1.752 1.752 0 110-3.505 1.752 1.752 0 010 3.505zm15.5 10.268h-3v-4.5c0-1.07-.02-2.450-1.492-2.450-1.495 0-1.725 1.166-1.725 2.372v4.578h-3v-9h2.88v1.23h.04a3.157 3.157 0 012.847-1.568c3.042 0 3.605 2.003 3.605 4.612v4.726z"/></svg></a>
+        </div>
+        
+      </div>
+      
+      <nav class="flex flex-col md:flex-row gap-9 w-full md:w-auto md:justify-end text-center md:text-left">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-widest mb-3 text-purple-400">Product</div>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Features</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Pricing</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Integrations</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Updates</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-widest mb-3 text-purple-400">Company</div>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">About</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Careers</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Blog</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-widest mb-3 text-purple-400">Resources</div>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Docs</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Community</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Support</a></li>
+            <li><a href="#" class="text-purple-200 hover:text-purple-50 transition">Security</a></li>
+          </ul>
+          
+        </div>
+         
+      </nav>
+      </div>
+     <span class="block mt-2 text-blue-300/80">&copy; 2024 DigiAI. All rights reserved @ NGAZIDIGITAL LABS.</span>
+  
+    </div>
+   
+    
+  </footer>
+  
+  
 
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.22/build/spline-viewer.js"></script>
-
-
+    
     <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        // Scroll to upload section
-        function scrollToUpload() {
-            document.getElementById('upload').scrollIntoView({ 
-                behavior: 'smooth' 
+      document.querySelector('spline-container iframe').addEventListener('load', function() {
+        document.querySelector('.spline-loading').style.display = 'none';
+      });
+    </script>
+
+
+        <script>
+          // ...existing code...
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    // ...existing code...
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
             });
-        }
-        
-        // Upload functionality
-        const uploadContainer = document.getElementById('upload-container');
-        const browseBtn = document.getElementById('browse-btn');
-        const fileInput = document.getElementById('file-input');
-        const uploadProgress = document.getElementById('upload-progress');
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercent = document.getElementById('progress-percent');
-        const uploadSuccess = document.getElementById('upload-success');
-        
-        // Handle drag and drop
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadContainer.addEventListener(eventName, preventDefaults, false);
-        });
-        
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadContainer.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadContainer.addEventListener(eventName, unhighlight, false);
-        });
-        
-        function highlight() {
-            uploadContainer.classList.add('dragover');
-        }
-        
-        function unhighlight() {
-            uploadContainer.classList.remove('dragover');
-        }
-        
-        // Handle dropped files
-        uploadContainer.addEventListener('drop', handleDrop, false);
-        
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-        
-        // Handle file selection via button
-        browseBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
-        
-        // Process files
-        function handleFiles(files) {
-            if (files.length === 0) return;
             
-            // Show upload progress
-            uploadProgress.classList.remove('hidden');
-            uploadSuccess.classList.add('hidden');
+            // Scroll to upload section
+            function scrollToUpload() {
+                document.getElementById('upload').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }
             
-            // Simulate upload progress
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 10;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    // Show success message after a delay
-                    setTimeout(() => {
-                        uploadProgress.classList.add('hidden');
-                        uploadSuccess.classList.remove('hidden');
-                    }, 500);
-                }
-                
-                progressBar.style.width = `${progress}%`;
-                progressPercent.textContent = `${Math.round(progress)}%`;
-            }, 200);
-        }
-        
-        // QR Code Modal
-        const generateQRBtn = document.getElementById('generate-qr-btn');
-        const qrModal = document.getElementById('qr-modal');
-        const closeQRModal = document.getElementById('close-qr-modal');
-        const qrCode = document.getElementById('qr-code');
-        
-        generateQRBtn.addEventListener('click', () => {
-    const qrContainer = document.getElementById('qr-code');
-    const dataToEncode = 'https://docsnap.com/share/abc123';
+            // Upload functionality
+            const uploadContainer = document.getElementById('upload-container');
+            const browseBtn = document.getElementById('browse-btn');
+            const fileInput = document.getElementById('file-input');
+            const uploadProgress = document.getElementById('upload-progress');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercent = document.getElementById('progress-percent');
+            const uploadSuccess = document.getElementById('upload-success');
+            
+            // Handle drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadContainer.addEventListener(eventName, preventDefaults, false);
+            });
 
-    // Clear any previous QR code
-    qrContainer.innerHTML = '';
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadContainer.addEventListener(eventName, unhighlight, false);
+            });
+            uploadContainer.addEventListener('dragenter', highlight, false);
 
-    // Create a new canvas element
-    const canvas = document.createElement('canvas');
+            function highlight() {
+                uploadContainer.classList.add('dragover');
+            }
 
-    // Generate QR code on the canvas
-    QRCode.toCanvas(canvas, dataToEncode, {
-        width: 160,
-        margin: 0,
-        color: {
-            dark: '#000000',
-            light: '#ffffff'
-        }
-    }, (error) => {
-        if (error) {
-            console.error(error);
-            return;
-        }
-        // Append the canvas to the container
-        qrContainer.appendChild(canvas);
+            function unhighlight() {
+                uploadContainer.classList.remove('dragover');
+            }
+            
+            // Handle dropped files
+            uploadContainer.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            // Handle file selection via button
+            browseBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+            
+          function handleFiles(files) {
+        if (files.length === 0) return;
+
+        // Show upload progress
+        uploadProgress.classList.remove('hidden');
+        uploadSuccess.classList.add('hidden');
+
+        // Simulate upload progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+
+                // Show success message after a delay
+                setTimeout(() => {
+                    uploadProgress.classList.add('hidden');
+                    uploadSuccess.classList.remove('hidden');
+
+                    // Show QR modal after upload success
+                    const qrModal = document.getElementById('qr-modal');
+                    const qrContainer = document.getElementById('qr-code');
+                    qrContainer.innerHTML = '';
+                    QRCode.toCanvas(qrContainer, 'https://docsnap.com/share/abc123', {
+                        width: 160,
+                        margin: 0,
+                        color: {
+                            dark: '#000000',
+                            light: '#ffffff'
+                        }
+                    }, (error) => {
+                        if (error) {
+                            console.error(error);
+                        }
+                    });
+                    qrModal.classList.remove('hidden');
+                }, 500);
+            }
+
+            progressBar.style.width = `${progress}%`;
+            progressPercent.textContent = `${Math.round(progress)}%`;
+        }, 200);
+    }
+            
+            // QR Code Modal
+            const generateQRBtn = document.getElementById('generate-qr-btn');
+            const qrModal = document.getElementById('qr-modal');
+            const closeQRModal = document.getElementById('close-qr-modal');
+            
+            generateQRBtn.addEventListener('click', () => {
+        const qrContainer = document.getElementById('qr-code');
+        const dataToEncode = 'https://docsnap.com/share/abc123';
+
+        // Clear any previous QR code
+        qrContainer.innerHTML = '';
+
+        // Create a new canvas element
+        const canvas = document.createElement('canvas');
+
+        // Generate QR code on the canvas
+        QRCode.toCanvas(canvas, dataToEncode, {
+            width: 160,
+            margin: 0,
+            color: {
+                dark: '#000000',
+                light: '#ffffff'
+            }
+        }, (error) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+            // Append the canvas to the container
+            qrContainer.appendChild(canvas);
+        });
+
+        // Show modal
+        qrModal.classList.add('active');
     });
 
-    // Show modal
-    qrModal.classList.add('active');
     closeQRModal.addEventListener('click', () => {
-    qrModal.classList.remove('active');
-});
-
-});
-
-        
-        // Close modal when clicking outside
-        qrModal.addEventListener('click', (e) => {
-            if (e.target === qrModal) {
-                qrModal.classList.remove('active');
-            }
-        });
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                qrModal.classList.remove('active');
-            }
-        });
-    </script>
-<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=joharie/docsnap" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+        qrModal.classList.add('hidden');
+    });
+            
+            // Close modal when clicking outside
+            qrModal.addEventListener('click', (e) => {
+                if (e.target === qrModal) {
+                    qrModal.classList.remove('active');
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    qrModal.classList.remove('active');
+                }
+            });
+        </script>
+        </script>
+    </body>
 </html>

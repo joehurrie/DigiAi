@@ -151,62 +151,6 @@
             </div>
         </div>
     </section>
-    </section>
-    <!-- Upload Section -->
-    <section id="upload" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
-                Scan A Document
-            </h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">
-                Simply drag and drop your files or click to browse. We support images and PDFs.
-            </p>
-        </div>
-        
-        <div class="max-w-4xl mx-auto">
-            <div id="upload-container" class="upload-zone glass-card rounded-2xl p-8 text-center cursor-pointer transition">
-                <div class="flex flex-col items-center justify-center">
-                    <div class="w-20 h-20 rounded-full bg-slate-800 flex items-center justify-center mb-6 floating">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Drag & Drop Files Here</h3>
-                    <p class="text-gray-400 mb-6">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
-                    <button id="browse-btn" class="px-6 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
-                        Scan Document
-                    </button>
-                    <input type="file" id="file-input" class="hidden" accept="image/*,.pdf" multiple>
-                </div>
-            </div>
-            
-            <div id="upload-progress" class="hidden mt-6">
-                <div class="flex justify-between mb-2">
-                    <span class="text-sm font-medium">Processing...</span>
-                    <span id="progress-percent" class="text-sm font-medium">0%</span>
-                </div>
-                <div class="w-full bg-slate-800 rounded-full h-1.5">
-                    <div id="progress-bar" class="progress-bar h-1.5 rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-            
-            <div id="upload-success" class="hidden glass-card rounded-2xl p-6 mt-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-medium">Upload Complete!</h3>
-                        <p class="text-gray-400">Document processed successfully.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     
     <!-- Features Section -->
     <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -215,7 +159,7 @@
                 Powerful Features
             </h2>
             <p class="text-lg text-gray-300 max-w-3xl mx-auto">
-                 Tools for document verification and management
+                 Tools for document verification and management.
             </p>
         </div>
         
@@ -319,7 +263,7 @@
       How It Works
     </h2>
     <p class="text-lg text-gray-300 max-w-3xl mx-auto">
-      Scan Review and edit the information on your documents.
+      Review and edit the extracted data from your documents.
     </p>
   </div>
   
@@ -518,7 +462,62 @@
   </div>
       </div>
       
-    
+    </section>
+    <!-- Upload Section -->
+    <section id="upload" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+                Scan A Document
+            </h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+                Simply drag and drop your files or click to browse. We support images and PDFs.
+            </p>
+        </div>
+        
+        <div class="max-w-4xl mx-auto">
+            <div id="upload-container" class="upload-zone glass-card rounded-2xl p-8 text-center cursor-pointer transition">
+                <div class="flex flex-col items-center justify-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-800 flex items-center justify-center mb-6 floating">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Drag & Drop Files Here</h3>
+                    <p class="text-gray-400 mb-6">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
+                    <button id="browse-btn" class="px-6 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
+                        Scan Document
+                    </button>
+                    <input type="file" id="file-input" class="hidden" accept="image/*,.pdf" multiple>
+                </div>
+            </div>
+            
+            <div id="upload-progress" class="hidden mt-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium">Processing...</span>
+                    <span id="progress-percent" class="text-sm font-medium">0%</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5">
+                    <div id="progress-bar" class="progress-bar h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div id="upload-success" class="hidden glass-card rounded-2xl p-6 mt-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-medium">Upload Complete!</h3>
+                        <p class="text-gray-400">Document processed successfully.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Results Section -->
 <section id="results" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -529,7 +528,7 @@
         Review Scanned Documents
       </h2>
       <p class="text-lg text-purple-200 max-w-3xl mx-auto">
-        Review and edit the extracted information from your documents
+        Review edit and save information from documents
       </p>
     </div>
     

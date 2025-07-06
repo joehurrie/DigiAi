@@ -145,6 +145,10 @@ p {
   }
 }
 /* Payment Methods Styling */
+.payment-method {
+  @apply flex flex-col items-center p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition cursor-pointer;
+  min-width: 80px;
+}
 
 /* Glass Card Consistency */
 .glass-card {
@@ -159,4 +163,42 @@ p {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+}
+
+/* Payment Toggle */
+.payment-toggle {
+  @apply relative flex bg-slate-800 rounded-lg p-1;
+}
+
+.payment-toggle button {
+  @apply px-4 py-2 rounded-md text-sm font-medium relative z-10;
+}
+
+.payment-toggle .active {
+  @apply bg-slate-700 text-white;
+}/* Add to your CSS */
+.payment-method {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 80px;
+  transition: all 0.3s ease;
+}
+
+.payment-method:hover {
+  background: rgba(15, 23, 42, 0.6);
+  transform: translateY(-2px);
+}
+
+.payment-method img {
+  filter: grayscale(100%) brightness(1.5);
+  transition: filter 0.3s ease;
+}
+
+.payment-method:hover img {
+  filter: grayscale(0) brightness(1);
 }

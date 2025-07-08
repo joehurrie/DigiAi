@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocuIQ | Smart, AI-enhanced document management</title>
+    <title>DocIQ | Smart, AI-enhanced document management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script>
      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -77,7 +78,7 @@
                   <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center shadow-md text-2xl font-extrabold text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   </span>
-                  <span class="text-xl font-semibold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">DocuIQ</span>
+                  <span class="text-xl font-semibold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">DocIQ</span>
                 </a>
                 </div>
                 <div class="hidden md:block">
@@ -119,7 +120,7 @@
     <section id="home" class="relative min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 overflow-hidden" style="height: 100vh; min-height: 600px;">
         <div class="relative z-10 w-full max-w-7xl mx-auto px-6 pt-16 md:pt-24 flex flex-col items-center">
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-light tracking-tighter mb-6 leading-tight">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Scan. Secure. Share.</span> 
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Scan. Verify. Share.</span> 
             </h1>
             <p class="text-gray-300 text-xl md:text-2xl mb-8 max-w-3xl font-light tracking-wide">
                AI-enhanced document management
@@ -463,8 +464,7 @@
     
     <!-- Action Buttons -->
     
-  </div>
-      </div>
+ 
       
     </section>
     <!-- Upload Section -->
@@ -489,7 +489,7 @@
                     <h3 class="text-xl font-semibold mb-2">Drag & Drop Files Here</h3>
                     <p class="text-gray-400 mb-6">Supported formats: JPG, PNG, PDF (Max 10MB)</p>
                     <button id="browse-btn" class="px-6 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
-                        Scan Document
+                        Upload
                     </button>
                     <input type="file" id="file-input" class="hidden" accept="image/*,.pdf" multiple>
                 </div>
@@ -501,7 +501,7 @@
                     <span id="progress-percent" class="text-sm font-medium">0%</span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-1.5">
-                    <div id="progress-bar" class="progress-bar h-1.5 rounded-full" style="width: 0%"></div>
+                    <div id="progress-bar" class="progress-bar h-1.5 rounded-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
             
@@ -522,7 +522,48 @@
             </div>
         </div>
     </section>
+ </div>
+      </div>
+      <div id="qr-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-70">
+  <div class="glass-card rounded-2xl p-8 max-w-md w-full">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-semibold">Document QR Code</h3>
+      <button id="close-qr-modal" class="text-gray-400 hover:text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div id="qr-code" class="flex justify-center mb-6"></div>
+    <p class="text-center text-gray-300 mb-6">Scan this code to access the document</p>
+    <div class="flex flex-col sm:flex-row gap-4">
+  <button onclick="downloadQR()"
+    class="flex-1 px-6 py-3 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition">
+    Download QR Code
+  </button>
 
+  <!-- Share Button -->
+<button id="share-btn"
+  class="flex-1 px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
+  Share
+</button>
+
+<!-- Toast Notification (outside the button) -->
+<div id="copy-toast"
+  class="fixed bottom-6 right-6 bg-green-600 text-white text-sm px-4 py-2 rounded-lg shadow-lg opacity-0 scale-95 transition-all duration-300 pointer-events-none z-50">
+  <span class="inline-flex items-center gap-2">
+    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+    Link copied!
+  </span>
+</div>
+
+
+</div>
+
+  </div>
+</div>
     <!-- Results Section -->
 <section id="results" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
   <div class="glass-card rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
@@ -532,94 +573,46 @@
         Review Scanned Documents
       </h2>
       <p class="text-lg text-purple-200 max-w-3xl mx-auto">
-        Review edit and save information from documents
+        Review, edit, and share encrypted documents
       </p>
     </div>
-    
-    <div class="flex flex-col lg:flex-row gap-8 items-stretch">
-      <!-- Data Processing Visualization -->
-      <div class="w-full lg:w-2/5 relative min-h-[400px]">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <!-- Central Processor -->
-          <div class="relative z-10 w-32 h-32 rounded-full bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/30 flex items-center justify-center inner-glow animate-pulse">
-            <svg class="w-16 h-16 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-            </svg>
-          </div>
-          
-          <!-- Animated Data Nodes -->
-          <div class="absolute top-1/4 left-1/4 data-node animate-float" style="animation-delay: 0s">
-            <div class="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
-              <div class="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-            <div class="data-line"></div>
-          </div>
-          
-          <div class="absolute top-1/3 right-1/4 data-node animate-float" style="animation-delay: 0.5s">
-            <div class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-              <div class="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-            <div class="data-line"></div>
-          </div>
-          
-          <div class="absolute bottom-1/4 left-1/2 data-node animate-float" style="animation-delay: 1s">
-            <div class="w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg">
-              <div class="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-            <div class="data-line"></div>
-          </div>
-          
-          <!-- Data Flow Lines to Cards -->
-          <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.8"/>
-                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.8"/>
-              </linearGradient>
-              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                <polygon points="0 0, 10 3.5, 0 7" fill="#8b5cf6"/>
-              </marker>
-            </defs>
-            
-            <!-- Flowing data lines -->
-            <path class="flow-line" d="M70,30 L85,30 L85,50" marker-end="url(#arrowhead)"/>
-            <path class="flow-line" d="M70,45 L85,45 L85,50" marker-end="url(#arrowhead)"/>
-            <path class="flow-line" d="M70,60 L85,60 L85,50" marker-end="url(#arrowhead)"/>
-          </svg>
-        </div>
-      </div>
-      
-      <!-- Extracted Information Cards -->
+
+    <!-- Main Content -->
+    <div class="flex flex-col lg:flex-row gap-6 items-stretch">
+      <!-- Extracted Info Cards -->
       <div class="w-full lg:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="field-card glass-card rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all relative overflow-hidden">
-          <!-- Data connection indicator -->
+        <!-- Full Name -->
+        <div class="glass-card rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all relative overflow-hidden">
           <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-500 rounded-full animate-ping"></div>
           <div class="flex justify-between items-start mb-2">
             <label class="text-sm font-medium text-purple-300">Full Name</label>
             <button class="text-purple-400 hover:text-purple-300 text-sm font-medium">Edit</button>
           </div>
-          <div class="text-lg font-medium text-white">John Michael Doe</div>
+          <div class="text-lg font-medium text-white">John Kamau</div>
         </div>
-        
-        <div class="field-card glass-card rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all relative overflow-hidden">
+
+        <!-- Date of Birth -->
+        <div class="glass-card rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all relative overflow-hidden">
           <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full animate-ping" style="animation-delay: 0.2s"></div>
           <div class="flex justify-between items-start mb-2">
             <label class="text-sm font-medium text-blue-300">Date of Birth</label>
             <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
           </div>
-          <div class="text-lg font-medium text-white">15/03/1985</div>
+          <div class="text-lg font-medium text-white">XX XX XXXX</div>
         </div>
-        
-        <div class="field-card glass-card rounded-xl p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all relative overflow-hidden">
+
+        <!-- ID Number -->
+        <div class="glass-card rounded-xl p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all relative overflow-hidden">
           <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-indigo-500 rounded-full animate-ping" style="animation-delay: 0.4s"></div>
           <div class="flex justify-between items-start mb-2">
             <label class="text-sm font-medium text-indigo-300">ID Number</label>
             <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">Edit</button>
           </div>
-          <div class="text-lg font-medium text-white">3425-1985-3509</div>
+          <div class="text-lg font-medium text-white">XXX XXX XXX</div>
         </div>
-        
-        <div class="field-card glass-card rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all relative overflow-hidden">
+
+        <!-- Document Type -->
+        <div class="glass-card rounded-xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all relative overflow-hidden">
           <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-500 rounded-full animate-ping"></div>
           <div class="flex justify-between items-start mb-2">
             <label class="text-sm font-medium text-purple-300">Document Type</label>
@@ -627,41 +620,63 @@
           </div>
           <div class="text-lg font-medium text-white">National ID</div>
         </div>
-        
-        <div class="field-card glass-card rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all relative overflow-hidden">
+
+        <!-- Issue Date -->
+        <div class="glass-card rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all relative overflow-hidden">
           <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full animate-ping" style="animation-delay: 0.2s"></div>
           <div class="flex justify-between items-start mb-2">
             <label class="text-sm font-medium text-blue-300">Issue Date</label>
             <button class="text-blue-400 hover:text-blue-300 text-sm font-medium">Edit</button>
           </div>
-          <div class="text-lg font-medium text-white">22/05/2018</div>
+          <div class="text-lg font-medium text-white">XX XX XXXX</div>
         </div>
-        
-        <div class="field-card glass-card rounded-xl p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all relative overflow-hidden">
+
+        <!-- Expiry Date -->
+        <div class="glass-card rounded-xl p-4 border border-indigo-500/20 hover:border-indigo-500/40 transition-all relative overflow-hidden">
           <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-indigo-500 rounded-full animate-ping" style="animation-delay: 0.4s"></div>
           <div class="flex justify-between items-start mb-2">
             <label class="text-sm font-medium text-indigo-300">Expiry Date</label>
             <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">Edit</button>
           </div>
-          <div class="text-lg font-medium text-white">21/05/2028</div>
+          <div class="text-lg font-medium text-white">XX XX XXXX</div>
+        </div>
+      </div>
+
+      <!-- Processor Visualization -->
+      <div class="w-full lg:w-2/5 relative min-h-[150px]">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="relative z-10 w-32 h-32 rounded-full bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/30 flex items-center justify-center inner-glow animate-pulse">
+            <svg class="w-16 h-16 text-green-500 transition-transform duration-300 ease-in-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10V7a5 5 0 0110 0v3" />
+              <rect x="5" y="10" width="14" height="10" rx="2" ry="2" />
+              <circle cx="12" cy="15" r="1.5" />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
-    
+
     <!-- Action Buttons -->
-    <div class="mt-10 flex flex-col sm:flex-row justify-space-between gap-4">
-      <button id="generate-qr-btn" class="px-6 py-3 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
+    <div class="mt-10 border-t border-purple-500/20 pt-6 flex flex-col sm:flex-row gap-4 sm:justify-between px-4 sm:px-36">
+      <button id="generate-qr-btn"
+        class="flex-1 sm:flex-none min-w-[160px] px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 bg-transparent hover:bg-slate-800 transition">
         Generate QR Code
       </button>
-      <button class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
-        Save
-      </button>
-      <button class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-gray-600 hover:bg-slate-800 transition">
-        Share
-      </button>
+
+      <a href="#pricing" class="flex-1 sm:flex-none min-w-[160px]">
+        <button id="Encrypt"
+          class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M12 17a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6-6V9a6 6 0 10-12 0v2H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-1zm-8-2a4 4 0 118 0v2H10V9z" />
+          </svg>
+          Encrypt
+        </button>
+      </a>
     </div>
   </div>
 </section>
+
 
 
     <style>
@@ -769,7 +784,7 @@
                     </div>
                 </div>
                 <p class="text-gray-300 text-base mb-4 flex-1">
-                    "DocuIQ made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
+                    "DocIQ made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
                 </p>
                 <div class="flex items-center space-x-1">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
@@ -787,7 +802,7 @@
                     </div>
                 </div>
                 <p class="text-gray-300 text-base mb-4 flex-1">
-                    "I love how DocuIQ keeps our employee documents organized and secure. The sharing feature is a game changer for remote teams."
+                    "I love how DocIQ keeps our employee documents organized and secure. The sharing feature is a game changer for remote teams."
                 </p>
                 <div class="flex items-center space-x-1">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
@@ -803,7 +818,7 @@
                     </div>
                 </div>
                 <p class="text-gray-300 text-base mb-4 flex-1">
-                    "DocuIQ made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
+                    "DocIQ made onboarding new clients a breeze. The scan and verification process is fast, secure, and easy for everyone."
                 </p>
                 <div class="flex items-center space-x-1">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
@@ -819,7 +834,7 @@
                     </div>
                 </div>
                 <p class="text-gray-300 text-base mb-4 flex-1">
-                    "DocuIQ has transformed how we handle sensitive documents. The security features give us peace of mind, and the interface is so user-friendly."
+                    "DocIQ has transformed how we handle sensitive documents. The security features give us peace of mind, and the interface is so user-friendly."
                 </p>
                 <div class="flex items-center space-x-1">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.785.57-1.84-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/></svg>
@@ -829,7 +844,7 @@
         </div>
     </section>
     <!-- Pricing Section -->
-<section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+<section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
   <div class="text-center mb-16">
     <h2 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
       Enjoy Unlimited Scans
@@ -1136,7 +1151,7 @@
          
       </nav>
       </div>
-     <span class="block mt-2 text-blue-300/80">&copy; 2024 DocuIQ. All rights reserved @ NGAZIDIGITAL LABS.</span>
+     <span class="block mt-2 text-blue-300/80">&copy; 2024 DocIQ. All rights reserved @ NGAZIDIGITAL LABS.</span>
   
     </div>
    
@@ -1154,172 +1169,161 @@
     </script>
 
 
-        <script>
-          // ...existing code...
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    // ...existing code...
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            // Scroll to upload section
-            function scrollToUpload() {
-                document.getElementById('upload').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            }
-            
-            // Upload functionality
-            const uploadContainer = document.getElementById('upload-container');
-            const browseBtn = document.getElementById('browse-btn');
-            const fileInput = document.getElementById('file-input');
-            const uploadProgress = document.getElementById('upload-progress');
-            const progressBar = document.getElementById('progress-bar');
-            const progressPercent = document.getElementById('progress-percent');
-            const uploadSuccess = document.getElementById('upload-success');
-            
-            // Handle drag and drop
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadContainer.addEventListener(eventName, preventDefaults, false);
-            });
+       <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Mobile menu toggle
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileMenuButton?.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
 
-            ['dragleave', 'drop'].forEach(eventName => {
-                uploadContainer.addEventListener(eventName, unhighlight, false);
-            });
-            uploadContainer.addEventListener('dragenter', highlight, false);
+  // Scroll to upload section
+  window.scrollToUpload = function () {
+    document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-            function highlight() {
-                uploadContainer.classList.add('dragover');
-            }
+  // Upload elements
+  const uploadContainer = document.getElementById('upload-container');
+  const browseBtn = document.getElementById('browse-btn');
+  const fileInput = document.getElementById('file-input');
+  const uploadProgress = document.getElementById('upload-progress');
+  const progressBar = document.getElementById('progress-bar');
+  const progressPercent = document.getElementById('progress-percent');
+  const uploadSuccess = document.getElementById('upload-success');
+  const generateQRBtn = document.getElementById('generate-qr-btn');
+  const qrModal = document.getElementById('qr-modal');
+  const closeQRModal = document.getElementById('close-qr-modal');
+  const qrContainer = document.getElementById('qr-code');
 
-            function unhighlight() {
-                uploadContainer.classList.remove('dragover');
-            }
-            
-            // Handle dropped files
-            uploadContainer.addEventListener('drop', handleDrop, false);
-            
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                handleFiles(files);
-            }
-            
-            // Handle file selection via button
-            browseBtn.addEventListener('click', () => {
-                fileInput.click();
-            });
-            
-            fileInput.addEventListener('change', () => {
-                handleFiles(fileInput.files);
-            });
-            
-          function handleFiles(files) {
-        if (files.length === 0) return;
-
-        // Show upload progress
-        uploadProgress.classList.remove('hidden');
-        uploadSuccess.classList.add('hidden');
-
-        // Simulate upload progress
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 10;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-
-                // Show success message after a delay
-                setTimeout(() => {
-                    uploadProgress.classList.add('hidden');
-                    uploadSuccess.classList.remove('hidden');
-
-                    // Show QR modal after upload success
-                    const qrModal = document.getElementById('qr-modal');
-                    const qrContainer = document.getElementById('qr-code');
-                    qrContainer.innerHTML = '';
-                    QRCode.toCanvas(qrContainer, 'https://docsnap.com/share/abc123', {
-                        width: 160,
-                        margin: 0,
-                        color: {
-                            dark: '#000000',
-                            light: '#ffffff'
-                        }
-                    }, (error) => {
-                        if (error) {
-                            console.error(error);
-                        }
-                    });
-                    qrModal.classList.remove('hidden');
-                }, 500);
-            }
-
-            progressBar.style.width = `${progress}%`;
-            progressPercent.textContent = `${Math.round(progress)}%`;
-        }, 200);
-    }
-            
-            // QR Code Modal
-            const generateQRBtn = document.getElementById('generate-qr-btn');
-            const qrModal = document.getElementById('qr-modal');
-            const closeQRModal = document.getElementById('close-qr-modal');
-            
-            generateQRBtn.addEventListener('click', () => {
-        const qrContainer = document.getElementById('qr-code');
-        const dataToEncode = 'https://docsnap.com/share/abc123';
-
-        // Clear any previous QR code
-        qrContainer.innerHTML = '';
-
-        // Create a new canvas element
-        const canvas = document.createElement('canvas');
-
-        // Generate QR code on the canvas
-        QRCode.toCanvas(canvas, dataToEncode, {
-            width: 160,
-            margin: 0,
-            color: {
-                dark: '#000000',
-                light: '#ffffff'
-            }
-        }, (error) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-            // Append the canvas to the container
-            qrContainer.appendChild(canvas);
-        });
-
-        // Show modal
-        qrModal.classList.add('active');
+  // Drag and drop
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadContainer.addEventListener(eventName, e => {
+      e.preventDefault();
+      e.stopPropagation();
     });
+  });
 
-    closeQRModal.addEventListener('click', () => {
-        qrModal.classList.add('hidden');
+  uploadContainer.addEventListener('dragenter', () => {
+    uploadContainer.classList.add('dragover');
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    uploadContainer.addEventListener(eventName, () => {
+      uploadContainer.classList.remove('dragover');
     });
-            
-            // Close modal when clicking outside
-            qrModal.addEventListener('click', (e) => {
-                if (e.target === qrModal) {
-                    qrModal.classList.remove('active');
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    qrModal.classList.remove('active');
-                }
-            });
-        </script>
-        </script>
+  });
+
+  uploadContainer.addEventListener('drop', e => {
+    handleFiles(e.dataTransfer.files);
+  });
+
+  browseBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+  function handleFiles(files) {
+  if (!files.length) return;
+
+  uploadProgress.classList.remove('hidden');
+  uploadSuccess.classList.add('hidden');
+  generateQRBtn.disabled = true;
+  qrContainer.innerHTML = '';
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    // Simulate realistic progress increments
+    const increment = Math.random() * 8 + 2; // between 2% and 10%
+    progress = Math.min(progress + increment, 100);
+
+    // Update UI
+    progressBar.style.width = `${progress}%`;
+    progressPercent.textContent = `${Math.round(progress)}%`;
+
+    if (progress >= 100) {
+      clearInterval(interval);
+
+      setTimeout(() => {
+        uploadProgress.classList.add('hidden');
+        uploadSuccess.classList.remove('hidden');
+
+        // Generate and store document ID
+        const documentId = generateUniqueId();
+        qrContainer.dataset.documentId = documentId;
+
+        // Enable QR generation button
+        generateQRBtn.disabled = false;
+      }, 500);
+    }
+  }, 200);
+}
+
+
+  function generateUniqueId() {
+    return Math.random().toString(36).substr(2, 9);
+  }
+
+  function generateDocumentUrl(documentId) {
+    return `${window.location.origin}/document/${documentId}`;
+  }
+
+  generateQRBtn.addEventListener('click', () => {
+    const documentId = qrContainer.dataset.documentId;
+    if (!documentId) {
+      alert('Please upload a document first.');
+      return;
+    }
+
+    const url = generateDocumentUrl(documentId);
+    qrContainer.innerHTML = '';
+
+    const canvas = document.createElement('canvas');
+    QRCode.toCanvas(canvas, url, {
+      width: 200,
+      margin: 2,
+      color: {
+        dark: '#000000',
+        light: '#ffffff'
+      }
+    }, error => {
+      if (error) {
+        console.error(error);
+        qrContainer.innerHTML = '<p class="text-red-400">Error generating QR code</p>';
+        return;
+      }
+      qrContainer.appendChild(canvas);
+      qrModal.classList.remove('hidden');
+    });
+  });
+
+  window.downloadQR = function () {
+    const canvas = document.querySelector('#qr-code canvas');
+    if (!canvas) return;
+
+    const documentId = qrContainer.dataset.documentId || 'document';
+    const link = document.createElement('a');
+    link.download = `docIQ-document-${documentId}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
+  closeQRModal.addEventListener('click', () => {
+    qrModal.classList.add('hidden');
+  });
+
+  qrModal.addEventListener('click', e => {
+    if (e.target === qrModal) {
+      qrModal.classList.remove('hidden');
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      qrModal.classList.add('hidden');
+    }
+  });
+});
+
+</script>
+
     </body>
 </html>
